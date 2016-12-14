@@ -5,5 +5,5 @@ ROOT=${DIR}/..
 
 if [ "$1" == "dev" ] || [ "$1" == "preprod" ] || [ "$1" == "prod" ]
 then
-    docker-compose -f ${ROOT}/docker-compose-$1.yml up
+    docker-compose -f ${ROOT}/docker-compose-$1.yml up -d
 fi
