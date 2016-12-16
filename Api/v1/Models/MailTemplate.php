@@ -39,6 +39,11 @@ class MailTemplate extends AbstractTemplateToPopulate
     private $contentHTMLTemplate;
 
     /**
+     * @var string
+     */
+    private $subject;
+
+    /**
      * MailTemplate constructor.
      * @param FileService $fileService
      * @param int $order
@@ -92,6 +97,7 @@ class MailTemplate extends AbstractTemplateToPopulate
             $contentHTML = null;
         }
 
+        $this->subject = $subject;
 
         $filename = $this->fileService->generateRandomFileName('.txt');
         $filepath = $this->fileService->getAbsolutePath($filename);
@@ -103,6 +109,14 @@ class MailTemplate extends AbstractTemplateToPopulate
     }
 
     /**
+     * @return string
+     */
+    public function getPopulatedSubject()
+    {
+        return $this->subject;
+    }
+
+    /**
      * @param resource $handle
      * @param string $subject
      * @param string $contentText
@@ -111,16 +125,6 @@ class MailTemplate extends AbstractTemplateToPopulate
     private function writeContents($handle, $subject, $contentText, $contentHTML)
     {
         $separator = '--'.self::MULTIPART_BOUNDARY;
-
-        fwrite($handle, <<<EOL
-$separator
-Content-Disposition: name="subject"
-Content-Type: text/plain
-
-$subject
-
-EOL
-        );
 
         if ($contentText) {
             fwrite($handle, <<<EOL

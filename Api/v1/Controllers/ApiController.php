@@ -46,7 +46,7 @@ class ApiController
                 $postData = $request->getParsedBody();
                 $documentsHandler = new DocumentsHandler($this->fileService, $accept, $postData);
                 $documentsHandler->generate();
-                return $this->fileService->serveFile($documentsHandler->getFinalDocument(), $documentsHandler->getMediaType());
+                return $this->fileService->serveFile($documentsHandler->getFinalDocument(), $documentsHandler->getMediaType(), $documentsHandler->getSpecificHeaders());
             } catch (\Exception $e) {
                 if ($attempts++ < MAX_ATTEMPTS) {
                     continue;

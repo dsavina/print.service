@@ -419,11 +419,11 @@ class FileService
      * @param string $contentType
      * @return Response
      */
-    public function serveFile(\SplFileInfo $file, string $contentType): Response
+    public function serveFile(\SplFileInfo $file, string $contentType, $specificHeaders=[]): Response
     {
         $attachedFile = fopen($file->getRealPath(), "r");
 
-        $response = (new Response($attachedFile, 200))
+        $response = (new Response($attachedFile, 200, $specificHeaders))
             ->withHeader("Content-Description", "File Transfer")
             ->withHeader("Content-Type", $contentType)
             ->withHeader("Content-Disposition", "attachement; filename=" . $file->getBasename())

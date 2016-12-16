@@ -42,6 +42,11 @@ class DocumentsHandler
     private $finalDocument;
 
     /**
+     * @var array;
+     */
+    private $specificHeaders;
+
+    /**
      * DocumentsHandler constructor.
      * @param FileService $fileService
      * @param string $mediaType
@@ -65,6 +70,7 @@ class DocumentsHandler
         $this->fileService = $fileService;
         $this->mediaType = $mediaType;
         $this->documents = [];
+        $this->specificHeaders = [];
 
         // case: merge many documents
         if ($isMerge) {
@@ -337,6 +343,7 @@ class DocumentsHandler
                     throw new \Exception("Mails can't be merged!");
                 }
                 $this->finalDocument = $currentTemplate->getPopulatedTemplate();
+                $this->specificHeaders = ["Subject" => $currentTemplate->getPopulatedSubject()];
             }
         }
     }
@@ -360,4 +367,8 @@ class DocumentsHandler
         return $this->mediaType;
     }
 
+    public function getSpecificHeaders(): array
+    {
+        return $this->specificHeaders;
+    }
 }
