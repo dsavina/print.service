@@ -216,9 +216,16 @@ class FileService
      */
     public function populateWordDocument(\SplFileInfo $file, array $data, string $resultFileName): \SplFileInfo
     {
+        $jsonHandle = tmpfile();
+        fwrite($jsonHandle, json_encode($data));
+        $jsonPath = stream_get_meta_data($jsonHandle)['uri'];
+        fclose($jsonHandle);
+
         $folderPath = $this->temporaryFilesFolder->getRealPath() . "/";
         $scriptFile = new \SplFileInfo(ROOT_PATH . "Api/v1/Scripts/populateWordDocument.js");
-        $nodeCommand = NODE_PATH . " " . $scriptFile->getRealPath() . " " . $file->getRealPath() . " " . escapeshellarg(json_encode($data)) . " " . $folderPath . $resultFileName;
+        $nodeCommand = NODE_PATH . " " . $scriptFile->getRealPath() . " " . $file->getRealPath() . " " . $jsonPath . " " . $folderPath . $resultFileName;
+
+        unlink($jsonPath);
 
         $process = new Process($nodeCommand);
         $process->run();
